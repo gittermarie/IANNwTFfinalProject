@@ -1,6 +1,3 @@
-"""
-Blah blah blah...
-"""
 import tensorflow as tf
 
 class WeightedCrossEntropyBinaryLoss:

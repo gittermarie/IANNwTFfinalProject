@@ -8,7 +8,7 @@ import pandas as pd
 import random
 import cv2
 import matplotlib.pyplot as plt
-%matplotlib inline
+#%matplotlib inline
 
 # Deep learning libraries
 import keras.backend as K
@@ -26,10 +26,9 @@ np.random.seed(seed)
 tf.random.set_seed(seed)
 
 
-# input_path = '../input/chest_xray/chest_xray/'
 input_path = 'C:/Users/marta/OneDrive/Desktop/Osnabruck/ImplementingANNswithTensorFlow/FinalProject/chest_xray/'
 
-def process_data(img_dims, batch_size):
+def prepare_data(img_dims, batch_size):
 
     # Data generation objects
     train_datagen = ImageDataGenerator(rescale=1./255, zoom_range=0.3, vertical_flip=True)
