@@ -31,7 +31,7 @@ input_path = 'C:/Users/marta/OneDrive/Desktop/Osnabruck/ImplementingANNswithTens
 def prepare_data(img_dims, batch_size):
 
     # Data generation objects
-    train_datagen = ImageDataGenerator(rescale=1./255, zoom_range=0.3, vertical_flip=True)
+    train_datagen = ImageDataGenerator(rescale=1./255, zoom_range=0.3, horizontal_flip=True)
     # This is fed to the network in the specified batch sizes and image dimensions
     train_gen = train_datagen.flow_from_directory(
     directory=input_path+'train', 
@@ -48,8 +48,6 @@ def prepare_data(img_dims, batch_size):
     class_mode='binary', 
     shuffle=True)
     
-    # I will be making predictions off of the test set in one batch size
-    # This is useful to be able to get the confusion matrix
     test_data = []
     test_labels = []
 
