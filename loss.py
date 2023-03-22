@@ -11,7 +11,7 @@ class WeightedCrossEntropyBinaryLoss:
     self.zero_weight = zero_weight
     self.one_weight = one_weight
 
-  def weighted_binary_crossentropy(y_true, y_pred):
+  def weighted_binary_crossentropy(self, y_true, y_pred):
     y_true = K.cast(y_true, dtype=tf.float32)
 
     epsilon = tf.keras.backend.epsilon()
