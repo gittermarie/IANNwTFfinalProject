@@ -7,6 +7,9 @@ import cv2
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
+import os
+import random
+import shutil
 
 
 # Setting seeds for the generator
@@ -16,6 +19,53 @@ tf.random.set_seed(seed)
 
 
 input_path = 'C:/Users/marta/OneDrive/Desktop/Osnabruck/ImplementingANNswithTensorFlow/FinalProject/chest_xray/'
+
+# Since the validation dataset size is so small, that it results in overfitting:
+def split_data(validation_split):
+    '''
+    Splits the training data into training and validation sets for the Normal and Pneumonia classes.
+    Moves shuffled 10% of the images from training set to validation set.
+
+    Parameters:
+    train_dir (str): path to the directory containing the original training data
+    val_dir (str): path to the directory where the validation data will be saved
+    validation_split (float): the percentage of images to move to the validation set
+
+    '''
+    # Set the directories for the normal and pneumonia classes
+    normal_train_dir = input_path+'train/'+'NORMAL'
+    pneumonia_train_dir = input_path+'train/'+'PNEUMONIA'
+    normal_val_dir = input_path+'val/'+'NORMAL'
+    pneumonia_val_dir = input_path+'val/'+'PNEUMONIA'
+
+    # Get the list of filenames in the normal and pneumonia training directories
+    normal_train_files = os.listdir(normal_train_dir)
+    pneumonia_train_files = os.listdir(pneumonia_train_dir)
+
+    # Shuffle the filenames randomly
+    random.shuffle(normal_train_files)
+    random.shuffle(pneumonia_train_files)
+
+    # Calculate the number of images to move to the validation set
+    num_normal_val = int(len(normal_train_files) * validation_split)
+    num_pneumonia_val = int(len(pneumonia_train_files) * validation_split)
+
+    # Move the selected images from the training directories to the validation directories
+    if len(normal_train_files) == int(1341) and len(pneumonia_train_files) == 3875:
+        for i in range(num_normal_val):
+            filename = normal_train_files[i]
+            src = os.path.join(normal_train_dir, filename)
+            dst = os.path.join(normal_val_dir, filename)
+            shutil.move(src, dst)
+
+        for i in range(num_pneumonia_val):
+            filename = pneumonia_train_files[i]
+            src = os.path.join(pneumonia_train_dir, filename)
+            dst = os.path.join(pneumonia_val_dir, filename)
+            shutil.move(src, dst)
+        print("Data split successful!")
+    else:
+        print("Data has already been split. Skipping data split.")
 
 
 def prepare_data(img_dims, batch_size):
@@ -39,16 +89,6 @@ def prepare_data(img_dims, batch_size):
         batch_size=batch_size, 
         class_mode='binary', 
         shuffle=True)
-
-    # Augment data with a testing data generation object
-    test_datagen = ImageDataGenerator(rescale=1./255)
-    # Obtain the testing data from a specific directory
-    test_gen = test_datagen.flow_from_directory(
-        directory=input_path+'test',
-        target_size=(img_dims, img_dims),
-        batch_size=batch_size,
-        class_mode='binary',
-        shuffle=True)
     
     test_data = []
     test_labels = []
@@ -70,4 +110,4 @@ def prepare_data(img_dims, batch_size):
     test_data = np.array(test_data)
     test_labels = np.array(test_labels)
     
-    return train_gen, val_gen, test_gen, test_data, test_labels
+    return train_gen, val_gen, test_data, test_labels
