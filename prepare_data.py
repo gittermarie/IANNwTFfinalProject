@@ -18,10 +18,10 @@ np.random.seed(seed)
 tf.random.set_seed(seed)
 
 
-input_path = 'C:/Users/marta/OneDrive/Desktop/Osnabruck/ImplementingANNswithTensorFlow/FinalProject/chest_xray/'
+#input_path = 'C:/Users/marta/OneDrive/Desktop/Osnabruck/ImplementingANNswithTensorFlow/FinalProject/chest_xray/'
 
 # Since the validation dataset size is so small, that it results in overfitting:
-def split_data(validation_split):
+def split_data(validation_split, input_path):
     '''
     Splits the training data into training and validation sets for the Normal and Pneumonia classes.
     Moves shuffled 10% of the images from training set to validation set.
@@ -51,7 +51,7 @@ def split_data(validation_split):
     num_pneumonia_val = int(len(pneumonia_train_files) * validation_split)
 
     # Move the selected images from the training directories to the validation directories
-    if len(normal_train_files) == int(1341) and len(pneumonia_train_files) == 3875:
+    if len(normal_train_files) == 1341 and len(pneumonia_train_files) == 3875:
         for i in range(num_normal_val):
             filename = normal_train_files[i]
             src = os.path.join(normal_train_dir, filename)
@@ -68,7 +68,7 @@ def split_data(validation_split):
         print("Data has already been split. Skipping data split.")
 
 
-def prepare_data(img_dims, batch_size):
+def prepare_data(img_dims, batch_size, input_path):
 
     # Augment data with a training data generation object and perform horizontal flipping as suggested by the paper
     train_datagen = ImageDataGenerator(rescale=1./255, zoom_range=0.3, horizontal_flip=True)
