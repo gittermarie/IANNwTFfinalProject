@@ -17,11 +17,8 @@ seed = 232
 np.random.seed(seed)
 tf.random.set_seed(seed)
 
-
-#input_path = 'C:/Users/marta/OneDrive/Desktop/Osnabruck/ImplementingANNswithTensorFlow/FinalProject/chest_xray/'
-
 # Since the validation dataset size is so small, that it results in overfitting:
-def split_data(validation_split, input_path):
+def split_data(validation_split, train_path, val_path):
     '''
     Splits the training data into training and validation sets for the Normal and Pneumonia classes.
     Moves shuffled 10% of the images from training set to validation set.
@@ -33,10 +30,10 @@ def split_data(validation_split, input_path):
 
     '''
     # Set the directories for the normal and pneumonia classes
-    normal_train_dir = input_path+'train/'+'NORMAL'
-    pneumonia_train_dir = input_path+'train/'+'PNEUMONIA'
-    normal_val_dir = input_path+'val/'+'NORMAL'
-    pneumonia_val_dir = input_path+'val/'+'PNEUMONIA'
+    normal_train_dir = train_path+'/NORMAL'
+    pneumonia_train_dir = train_path+'/PNEUMONIA'
+    normal_val_dir = val_path+'/NORMAL'
+    pneumonia_val_dir = val_path+'/PNEUMONIA'
 
     # Get the list of filenames in the normal and pneumonia training directories
     normal_train_files = os.listdir(normal_train_dir)
@@ -68,13 +65,13 @@ def split_data(validation_split, input_path):
         print("Data has already been split. Skipping data split.")
 
 
-def prepare_data(img_dims, batch_size, input_path):
+def prepare_data(img_dims, batch_size, train_path, val_path, test_path):
 
     # Augment data with a training data generation object and perform horizontal flipping as suggested by the paper
     train_datagen = ImageDataGenerator(rescale=1./255, zoom_range=0.3, horizontal_flip=True)
     # Obtain the training data from a specific directory
     train_gen = train_datagen.flow_from_directory(
-        directory=input_path+'train',
+        directory=train_path,
         batch_size=batch_size,
         target_size=(img_dims, img_dims),
         class_mode='binary',
@@ -84,7 +81,7 @@ def prepare_data(img_dims, batch_size, input_path):
     val_datagen = ImageDataGenerator(rescale=1./255)
     # Obtain the validation data from a specific directory
     val_gen = val_datagen.flow_from_directory(
-        directory=input_path+'val', 
+        directory=val_path, 
         target_size=(img_dims, img_dims), 
         batch_size=batch_size, 
         class_mode='binary', 
@@ -95,8 +92,8 @@ def prepare_data(img_dims, batch_size, input_path):
 
     # Preprocess images
     for cond in ['/NORMAL/', '/PNEUMONIA/']:
-        for img in (os.listdir(input_path + 'test' + cond)):
-            img = plt.imread(input_path+'test'+cond+img)
+        for img in (os.listdir(test_path + cond)):
+            img = plt.imread(test_path+cond+img)
             img = cv2.resize(img, (img_dims, img_dims))
             img = np.dstack([img, img, img])
             img = img.astype('float32') / 255
