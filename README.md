@@ -6,7 +6,6 @@ Recent advances in deep learning have provided evidence that neural networks cou
 
 In this project, we have compared the performance of a modified DenseNet121, that is one of the state-of-the-art models in pneumonia detection (CheXNet) with an adapted residual neural network (ResNet). For that, we have reimplemented the model following the methods provided in the original study and then compared it with ResNet, which will both be trained on the Chest X-ray 2017 dataset on the binary classification task, differentiating between pneumonia-ridden and healthy individuals. 
 
-Link to the Chest X-ray 2017 dataset: https://data.mendeley.com/datasets/rscbjbr9sj/2 ((+ some short description of the dataset; an exemplary image from the dataset))
+Link to the Chest X-ray 2017 dataset: https://data.mendeley.com/datasets/rscbjbr9sj/2
 
-Link to the original paper: https://arxiv.org/pdf/1711.05225v3.pdf ((+ some short description of the paper))
-
+Link to the original paper: https://arxiv.org/pdf/1711.05225v3.pdf
